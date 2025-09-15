@@ -1,0 +1,31 @@
+# IDE
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Env files
+.env
+.env.*
+
+# SQLite DB
+db.sqlite3
+
+# Django static/media/uploads (если не хранятся в git)
+files/
+data/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Coverage/pytest
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
