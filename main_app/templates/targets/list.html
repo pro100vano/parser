@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Список ссылок{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}"><i class="ti-home"></i> Главная</a></li>
+    <li class="breadcrumb-item"><i class="ti-layers-alt"></i> Проверка</li>
+    <li class="breadcrumb-item active"><i class="ti-list"></i> Список</li>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="table-responsive">
+        <table id="myTable">
+            <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Ссылка</th>
+                <th>Проверка</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for target in targets %}
+                <tr>
+                    <td>{{ target.title }}</td>
+                    <td>{{ target.short_url }}</td>
+                    <td>
+                        {% if target.settings.last is not None %}
+                            Сложная
+                        {% else %}
+                            Обычная
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ target }}
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let table = $('#myTable').DataTable();
+    </script>
+{% endblock %}

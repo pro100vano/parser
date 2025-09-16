@@ -18,6 +18,7 @@ db.sqlite3
 
 # Django static/media/uploads (если не хранятся в git)
 files/
+static/
 data/
 
 # OS junk
@@ -29,3 +30,6 @@ htmlcov/
 .coverage
 .tox/
 .pytest_cache/
+
+# Django local settings
+parser_proj/local_settings.py

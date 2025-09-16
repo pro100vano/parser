@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/siqtheme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="theme-dark">
+<div class="grid-wrapper sidebar-bg bg1">
+
+    <div class="header">
+        <div class="header-bar">
+            <div class="brand">
+                <a href="{% url 'main:dashboard' %}" class="logo"><span class="text-carolina">MARMAX</span>check</a>
+                <a href="{% url 'main:dashboard' %}" class="logo-sm" style="display: none;"><span class="text-carolina">M</span>C</a>
+            </div>
+            <div class="btn-toggle">
+                <a href="#" class="slide-sidebar-btn" style="display: none;"><i class="ti-menu"></i></a>
+            </div>
+            <div class="navigation d-flex">
+
+                <!-- BOF Header Nav -->
+                <div class="navbar-menu d-flex">
+                    <div class="menu-item text-right mr-1">
+                        <span class="text-right text-apple font-size-16 align-items-center d-flex h-100">{{ user }}</span>
+                    </div>
+                    <div class="menu-item">
+                        <a href="#" class="btn" data-toggle="dropdown">
+                            <i class="ti-bell"></i>
+                            <span class="badge badge-pill badge-danger">3</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-alert">
+                            <li class="dropdown-header text-center"><a href="#"><i class="ti-comment-alt"></i> View
+                                All Alerts <i class="ti-angle-right"></i></a></li>
+                            <li><a href="#"><i class="fa fa-user"></i> New user registered <span>Just now</span></a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-calendar-plus-o"></i> New event created <span>5 min
+                                            ago</span></a></li>
+                            <li><a href="#"><i class="fa fa-area-chart"></i> Report ready to download <span>1 day
+                                            ago</span></a></li>
+                            <li><a href="#"><i class="fa fa-bank"></i> Bill payment reminder <span>1 day
+                                            ago</span></a></li>
+                            <li><a href="#"><i class="fa fa-clock-o"></i> Staff meeting <span>3 days ago</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu-item">
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn text-secondary"><i class="ti-shift-right"></i></button>
+                        </form>
+                    </div>
+                </div>
+                <!-- EOF Header Nav -->
+
+            </div>
+        </div>
+    </div>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <!-- sidebar-menu  -->
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="header-menu">
+                        <span>Меню</span>
+                    </li>
+                    <li class="{% if request.resolver_match.url_name == "dashboard" %}active{% endif %}">
+                        <a href="{% url 'main:dashboard' %}">
+                            <i class="ti-dashboard"></i>
+                            <span class="menu-text">Главная</span>
+                        </a>
+                    </li>
+                    <li class="maincat{% if 'targets' in request.resolver_match.namespaces %} active{% endif %}">
+                        <a href="#">
+                            <i class="ti-layers-alt"></i>
+                            <span class="menu-text">Проверки</span>
+                        </a>
+                        <div class="subcat">
+                            <ul>
+                                <li {% if request.resolver_match.url_name == "list" and 'targets' in request.resolver_match.namespaces %}class="active"{% endif %}>
+                                    <a href="{% url 'main:targets:list' %}">Список</a>
+                                </li>
+                                <li>
+                                    <a href="">Добавить</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="documenation.html">
+                            <i class="ti-agenda"></i>
+                            <span class="menu-text">Documentation</span>
+                            <span class="badge badge-pill badge-primary">Beta</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/siQuang/siqtheme" target="_blank">
+                            <i class="ti-github"></i>
+                            <span class="menu-text">siQtheme Github</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- sidebar-menu  -->
+        </div>
+    </div>
+    <div class="main">
+
+        <!-- BOF Breadcrumb -->
+        <div class="row">
+            <div class="col">
+                <ol class="breadcrumb">
+                    {% block breadcrumb %}{% endblock %}
+                </ol>
+            </div>
+        </div>
+
+        {% block content %}{% endblock %}
+
+    </div>
+    <div id="overlay"></div>
+    <div class="footer">
+        <p class="text-center mt-3">Copyright © 2025. All rights reserved.</p>
+    </div>
+</div>
+<script src="{% static 'js/siqtheme.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
