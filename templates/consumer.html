@@ -1,0 +1,35 @@
+<script>
+    const roomName = 'user_{{ user.id }}';
+    const webSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+        + roomName
+        + '/'
+    );
+
+
+    webSocket.onopen = function () {
+        console.log('Соединение успешно открыто!');
+        console.log(webSocket);
+    };
+
+    webSocket.onerror = function(error) {
+        console.error('Ошибка:', error);
+    };
+
+    webSocket.onmessage = function (e) {
+        let data = JSON.parse(e.data);
+        try {
+            console.log(data);
+            {#window[data.func](data)#}
+        }catch (e) {
+            console.warn(data.type, e);
+        }
+    };
+
+    webSocket.onclose = function (e) {
+        console.warn('Соединение было разоравано сервером');
+    };
+
+</script>

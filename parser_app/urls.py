@@ -5,5 +5,5 @@ app_name = 'parser'
 
 
 urlpatterns = [
-
+    path('start/', views.StartParser.as_view(), name="start")
 ]

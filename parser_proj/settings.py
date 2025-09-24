@@ -37,12 +37,16 @@ CSRF_TRUSTED_ORIGINS = tuple(env.list('CSRF_TRUSTED_ORIGINS', default=[]))
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django_celery_beat',
     'main_app',
     'notifications_app',
     'parser_app',
@@ -90,6 +94,24 @@ DATABASES = {
     }
 }
 
+WSGI_APPLICATION = 'parser_proj.wsgi.application'
+ASGI_APPLICATION = 'parser_proj.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [f"redis://{env.str('REDIS_HOST')}:{env.int('REDIS_PORT')}/1"],
+        },
+    },
+}
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_URL = f"redis://{env.str('REDIS_HOST')}:{env.int('REDIS_PORT')}/1"
+CELERY_RESULT_BACKEND = f"redis://{env.str('REDIS_HOST')}:{env.int('REDIS_PORT')}/1"
+CELERY_TIMEZONE = "Europe/Moscow"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -117,7 +139,7 @@ LANGUAGE_CODE = 'ru-RU'
 TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -139,7 +161,9 @@ PRIVATE_STORAGE_ROOT = os.path.join(BASE_DIR, 'files', 'upload')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 PUBLIC_URLS = [
     r'^/auth/*',
     r'^/logout/*',
+    r'^/parser/start/*',
 ]
