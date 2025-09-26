@@ -18,7 +18,7 @@ db.sqlite3
 
 # Django static/media/uploads (если не хранятся в git)
 files/
-static/
+# static/
 data/
 
 # OS junk

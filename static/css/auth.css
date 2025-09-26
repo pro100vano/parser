@@ -1,0 +1,12 @@
+body{
+    padding-top: 200px;
+}
+
+.auth_form{
+    width: 400px;
+    margin: 0 auto;
+}
+
+.auth_form .card-header{
+    grid-template-columns: auto;
+}

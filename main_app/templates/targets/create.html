@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить проверку{% endblock %}
+
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}"><i class="ti-home"></i> Главная</a></li>
+    <li class="breadcrumb-item"><i class="ti-layers-alt"></i> Проверка</li>
+    <li class="breadcrumb-item active"><i class="ti-plus"></i> Добавить</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <form class="form">
+                    {% csrf_token %}
+                    <div class="card-header uppercase">
+                        Добавить проверку
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="title">Заголовок</label>
+                            <input type="text" id="title" name="title" class="form-control"
+                                   placeholder="Проверка Авито" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="link">Ссылка</label>
+                            <input type="text" id="link" name="link" class="form-control"
+                                   placeholder="https://example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="target_type">Тип проверки</label>
+                            <select class="form-control" id="target_type" name="type">
+                                {% for type in types %}
+                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="list-group d-none" id="rows">
+
+                            <div class="row list-group-item bg-custom-dark">
+                                <span class="remove_param text-danger"><i class="ti-trash"></i></span>
+                                <div class="form-group col-12">
+                                    <label for="checking_type">Что проверяем</label>
+                                    <select class="form-control" id="checking_type">
+                                        {% for type in checking_types %}
+                                            <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="type_param">Доп. параметр</label>
+                                    <input type="text" id="type_param" class="form-control">
+                                </div>
+                                <div class="form-group col-12">
+                                    <label for="block">Проверяемый блок</label>
+                                    <input type="text" id="block" class="form-control"
+                                           placeholder="body .example .class">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-2" style="order: 1">
+                                <button class="btn btn-flat btn-outline-success" id="add_row">Добавить</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-right">
+                        <button class="btn btn-flat btn-primary">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header uppercase">
+                    Дополнительная информация
+                </div>
+                <div class="card-body">
+                    <p class="text-info">
+                        Если проверка настроена неверно, она, скорее всего, не будет проходить, что приведет к бессмысленным уведомлениям о провале.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-none" id="row_example">
+        <div class="row list-group-item bg-custom-dark">
+            <span class="remove_param text-danger"><i class="ti-trash"></i></span>
+            <div class="form-group col-12">
+                <label for="checking_type">Что проверяем</label>
+                <select class="form-control" id="checking_type">
+                    {% for type in checking_types %}
+                        <option value="{{ type.0 }}">{{ type.1 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-12">
+                <label for="type_param">Доп. параметр</label>
+                <input type="text" id="type_param" class="form-control">
+            </div>
+            <div class="form-group col-12">
+                <label for="block">Проверяемый блок</label>
+                <input type="text" id="block" class="form-control"
+                       placeholder="body .example .class">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#target_type').on('change', function () {
+                if ($(this).val() === '1') {
+                    $('#rows').removeClass('d-none');
+                }else{
+                    $('#rows').addClass('d-none');
+                }
+            });
+
+            $('.remove_param').on('click', function () {
+                $(this).closest('.row').remove()
+            });
+
+            $('#add_row').on('click', function (e) {
+                e.preventDefault();
+                $('#row_example .row').clone().appendTo('#rows');
+            });
+
+            $('form.form').on('submit', function (e){
+                e.preventDefault();
+                let data = $(this).serializeArray();
+                if ($('#target_type').val() === '1') {
+                    let params = [];
+                    $('#rows .row').each((i, row) => {
+                        params.push({
+                            'checking_type': $(row).find('#checking_type').val(),
+                            'type_param': $(row).find('#type_param').val(),
+                            'block': $(row).find('#block').val()
+                        });
+                    })
+                    data.push({name: 'params', value: JSON.stringify(params)});
+                }
+                $.ajax({
+                    url: '{% url "main:targets:create" %}',
+                    method: 'POST',
+                    data: data
+                }).done((response) => {
+                    if (response.detail === 'OK'){
+                        window.location.replace(response.redirect_to);
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

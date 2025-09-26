@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Список ссылок{% endblock %}
+{% block title %}Список проверок{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}"><i class="ti-home"></i> Главная</a></li>
@@ -12,12 +12,15 @@
 {% block content %}
 
     <div class="table-responsive">
-        <table id="myTable">
-            <thead>
+        <table id="myTable" class="table table-bordered table-hover init-datatable dataTable no-footer">
+            <thead class="thead-light">
             <tr>
                 <th>Наименование</th>
                 <th>Ссылка</th>
                 <th>Проверка</th>
+                <th>Статус</th>
+                <th>Посл. проверка</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -26,23 +29,108 @@
                     <td>{{ target.title }}</td>
                     <td>{{ target.short_url }}</td>
                     <td>
-                        {% if target.settings.last is not None %}
-                            Сложная
+                        {{ target.get_type_display }}
+                    </td>
+                    <td>
+                        <span class="{% if target.status == 1 %}text-success{% elif target.status == 2 %}text-danger{% elif target.status == 3 %}text-warning{% endif %}">
+                            {{ target.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if target.status_changed is not None %}
+                            {{ target.status_changed }}
                         {% else %}
-                            Обычная
+                            --------
                         {% endif %}
+                    </td>
+                    <td class="td_actions">
+                        {% if target.type == 1 %}
+                            <span class="target_info text-info"><i class="ti-eye"></i></span>
+                            <div class="modal fade" id="targetInfo" tabindex="-1" role="dialog" aria-modal="true" style="background-color: rgba(0, 0, 0, 0.5);">
+                                <div class="modal-dialog modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">{{ target.title }}</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% for setting in target.target_settings %}
+                                                <p>{{ setting }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <a class="target_activate{% if target.activate %} bg-success{% else %} bg-secondary{% endif %}" href="{% url 'parser:activate_toggle' target.pk %}"></a>
+                        <a class="target_remove text-danger" href="{% url 'parser:remove_target' target.pk %}"><i class="ti-trash"></i></a>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
-    {{ target }}
+    <div class="modal fade" id="deleteItem" tabindex="-1" role="dialog" aria-modal="true" style="background-color: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Удаление</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены что хотите удалить?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn_close" data-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-danger btn_remove">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
 {% block scripts %}
     <script>
-        let table = $('#myTable').DataTable();
+        $(document).on('click', '.target_remove', function(e){
+            e.preventDefault();
+            let link = $(this).attr('href');
+            $('#deleteItem').css({'display': 'block'}).addClass('show');
+
+            $('#deleteItem .btn_remove').on('click', function (){
+                window.location.replace(link);
+            });
+        });
+
+        $('.target_info').on('click', function (e){
+            $('#targetInfo').css({'display': 'block'}).addClass('show');
+        });
+
+        $('.modal .close, .modal .btn_close').on('click', function (e){
+            e.preventDefault();
+            $(this).closest('.modal').css({'display': 'none'}).removeClass('show');
+        });
+
+        let table = $('#myTable').DataTable({
+            pageLength: 50,
+            language: {
+                search: "Поиск:",
+                zeroRecords: "Нет записей",
+                lengthMenu: "Показывать _MENU_ записей",
+                infoPostFix: "",
+                info: "Записи _START_-_END_ из _TOTAL_",
+                infoFiltered: "(всего _MAX_)",
+                paginate: {
+                    first:      "Первая",
+                    previous:   "Предыдущая",
+                    next:       "Следующая",
+                    last:       "Последняя"
+                },
+            }
+        });
     </script>
 {% endblock %}

@@ -9,6 +9,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/siqtheme.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" href="{% static 'img/logo.png' %}">
 </head>
 <body class="theme-dark">
 <div class="grid-wrapper sidebar-bg bg1">
@@ -85,8 +86,8 @@
                                 <li {% if request.resolver_match.url_name == "list" and 'targets' in request.resolver_match.namespaces %}class="active"{% endif %}>
                                     <a href="{% url 'main:targets:list' %}">Список</a>
                                 </li>
-                                <li>
-                                    <a href="">Добавить</a>
+                                <li {% if request.resolver_match.url_name == "create" and 'targets' in request.resolver_match.namespaces %}class="active"{% endif %}>
+                                    <a href="{% url 'main:targets:create' %}">Добавить</a>
                                 </li>
                             </ul>
                         </div>
