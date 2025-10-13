@@ -1,0 +1,40 @@
+services:
+  redis:
+    image: redis:latest
+    restart: always
+  db:
+    image: postgres
+    restart: always
+    hostname: postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+  daphne:
+    build:
+      context: .
+      network: host
+    restart: always
+    command: bash -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && python3 manage.py seed all && daphne -b 0.0.0.0 -p ${DAPHNE_PORT} server_new.asgi:application"
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      MACHINE_HOST: 127.0.0.1
+      HOST_IP: ${HOST_IP}
+      HOST_PORT: ${DAPHNE_PORT}
+      NGINX_PORT: ${NGINX_PORT}
+      HOST_DOMAIN: ${HOST_DOMAIN}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${DAPHNE_PORT}:${DAPHNE_PORT}"
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/code

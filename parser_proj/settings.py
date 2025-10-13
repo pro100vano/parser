@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_celery_beat',
+    'seeds',
     'main_app',
     'notifications_app',
     'parser_app',
