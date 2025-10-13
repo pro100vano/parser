@@ -33,3 +33,7 @@ htmlcov/
 
 # Django local settings
 parser_proj/local_settings.py
+
+
+# custom
+celerybeat-schedule.*
