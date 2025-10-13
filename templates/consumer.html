@@ -1,4 +1,40 @@
 <script>
+    let notifications_wrapper = $('#dropdown_notifications');
+    function notification(data){
+        const date = new Date(data.timestamp);
+
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        if (data.unread_count > 0){
+            $('#notifications_wrapper .badge').text(data.unread_count).removeClass('hide');
+        }else{
+            $('#notifications_wrapper .badge').text('').addClass('hide');
+        }
+        notifications_wrapper.prepend(`<li data-src="${data.id}" class="unread"><i class="fa fa-clock-o"></i> ${data.message}<span>${hours}:${minutes} ${day}.${month}</span></li>`)
+    }
+
+    notifications_wrapper.on('mouseenter', 'li.unread', function (e){
+        let $element = $(this);
+        $.ajax({
+            url: '{% url "notifications:read" 0 %}'.replace('0', $element.attr('data-src')),
+            method: 'POST',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            }
+        }).done(function (response){
+            if (response.detail !== 'ERR'){
+                $element.removeClass('unread');
+                if (response.detail > 0){
+                    $('#notifications_wrapper .badge').text(response.detail).removeClass('hide');
+                }else{
+                    $('#notifications_wrapper .badge').text('').addClass('hide');
+                }
+            }
+        })
+    });
+
     const roomName = 'user_{{ user.id }}';
     const webSocket = new WebSocket(
         'ws://'
@@ -22,7 +58,7 @@
         let data = JSON.parse(e.data);
         try {
             console.log(data);
-            {#window[data.func](data)#}
+            window[data.func](data)
         }catch (e) {
             console.warn(data.type, e);
         }

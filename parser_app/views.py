@@ -7,6 +7,7 @@ from rest_framework.reverse import reverse_lazy
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponseRedirect
 from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from rest_framework.authtoken.models import Token
 
 from parser_app.repositories import ParserRepository
 from parser_app.utils import Parser
@@ -32,21 +33,22 @@ class StartParser(APIView):
     permission_classes = (AllowAny, )
 
     def post(self, request):
-        targets = ParserRepository.get_active_targets_list()
-        Parser().start_parser(targets)
+        user = Token.objects.get(key=request.headers.get('Authorization')).user
+        targets = ParserRepository(user).get_active_targets_list()
+        Parser(user).start_parser(targets)
         return JsonResponse({"status": "OK"}, status=200)
 
 
 class ToggleTarget(APIView):
 
     def get(self, request, **kwargs):
-        ParserRepository().toggle_target(kwargs.get('pk'))
+        ParserRepository(request.user).toggle_target(kwargs.get('pk'))
         return HttpResponseRedirect(reverse_lazy('main:targets:list'))
 
 
 class RemoveTarget(APIView):
 
     def get(self, request, **kwargs):
-        ParserRepository().remove_target(kwargs.get('pk'))
+        ParserRepository(request.user).remove_target(kwargs.get('pk'))
         return HttpResponseRedirect(reverse_lazy('main:targets:list'))
 

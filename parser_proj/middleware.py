@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.utils.deprecation import MiddlewareMixin
 
+from notifications_app.repositories import NotificationRepository
+
 
 class LoginRequiredMiddleware(MiddlewareMixin):
 
@@ -16,6 +18,9 @@ class LoginRequiredMiddleware(MiddlewareMixin):
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         if request.user.is_authenticated:
+            notif_rep = NotificationRepository(request.user)
+            request.notifications = notif_rep.get_some(5)
+            request.notifications_count = notif_rep.get_unread_count()
             return None
         elif self.is_public_url(request.path_info):
             return None

@@ -17,8 +17,8 @@
     <div class="header">
         <div class="header-bar">
             <div class="brand">
-                <a href="{% url 'main:dashboard' %}" class="logo"><span class="text-carolina">MARMAX</span>check</a>
-                <a href="{% url 'main:dashboard' %}" class="logo-sm" style="display: none;"><span class="text-carolina">M</span>C</a>
+                <a href="{% url 'main:dashboard' %}" class="logo"><span class="text-carolina">F</span>Checker</a>
+                <a href="{% url 'main:dashboard' %}" class="logo-sm" style="display: none;"><span class="text-carolina">F</span>C</a>
             </div>
             <div class="btn-toggle">
                 <a href="#" class="slide-sidebar-btn" style="display: none;"><i class="ti-menu"></i></a>
@@ -30,24 +30,24 @@
                     <div class="menu-item text-right mr-1">
                         <span class="text-right text-apple font-size-16 align-items-center d-flex h-100">{{ user }}</span>
                     </div>
-                    <div class="menu-item">
+                    <div class="menu-item" id="notifications_wrapper">
                         <a href="#" class="btn" data-toggle="dropdown">
                             <i class="ti-bell"></i>
-                            <span class="badge badge-pill badge-danger">3</span>
+                            <span class="badge badge-pill badge-danger{% if not request.notifications_count > 0 %} hide{% endif %}">{{ request.notifications_count }}</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-right dropdown-alert">
-                            <li class="dropdown-header text-center"><a href="#"><i class="ti-comment-alt"></i> View
-                                All Alerts <i class="ti-angle-right"></i></a></li>
-                            <li><a href="#"><i class="fa fa-user"></i> New user registered <span>Just now</span></a>
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-alert" id="dropdown_notifications">
+                            <li class="dropdown-header text-center">
+                                <a href="{% url "notifications:list" %}">
+                                    <i class="ti-comment-alt"></i> Посмотреть все <i class="ti-angle-right"></i>
+                                </a>
                             </li>
-                            <li><a href="#"><i class="fa fa-calendar-plus-o"></i> New event created <span>5 min
-                                            ago</span></a></li>
-                            <li><a href="#"><i class="fa fa-area-chart"></i> Report ready to download <span>1 day
-                                            ago</span></a></li>
-                            <li><a href="#"><i class="fa fa-bank"></i> Bill payment reminder <span>1 day
-                                            ago</span></a></li>
-                            <li><a href="#"><i class="fa fa-clock-o"></i> Staff meeting <span>3 days ago</span></a>
-                            </li>
+                            {% for notification in request.notifications %}
+                                <li data-src="{{ notification.id }}"{% if not notification.has_seen %} class="unread"{% endif %}>
+                                    <i class="fa fa-clock-o"></i>
+                                    {{notification.message}}
+                                    <span>{{notification.draw_date}}</span>
+                                </li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="menu-item">
@@ -93,16 +93,15 @@
                         </div>
                     </li>
                     <li>
-                        <a href="documenation.html">
+                        <a href="{% url 'main:documentation' %}">
                             <i class="ti-agenda"></i>
-                            <span class="menu-text">Documentation</span>
-                            <span class="badge badge-pill badge-primary">Beta</span>
+                            <span class="menu-text">Инструкции</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="https://github.com/siQuang/siqtheme" target="_blank">
-                            <i class="ti-github"></i>
-                            <span class="menu-text">siQtheme Github</span>
+                    <li class="{% if request.resolver_match.url_name == "settings" %}active{% endif %}">
+                        <a href="{% url 'main:settings' %}">
+                            <i class="ti-settings"></i>
+                            <span class="menu-text">Настройки</span>
                         </a>
                     </li>
                 </ul>
@@ -126,7 +125,7 @@
     </div>
     <div id="overlay"></div>
     <div class="footer">
-        <p class="text-center mt-3">Copyright © 2025. All rights reserved.</p>
+        <p class="text-center mt-3">Copyright © 2025 FChecker. All rights reserved.</p>
     </div>
 </div>
 <script src="{% static 'js/siqtheme.js' %}"></script>

@@ -64,6 +64,7 @@
                                 </div>
                             </div>
                         {% endif %}
+                        <a class="target_edit" href="{% url 'main:targets:edit' target.pk %}"><i class="ti-pencil"></i></a>
                         <a class="target_activate{% if target.activate %} bg-success{% else %} bg-secondary{% endif %}" href="{% url 'parser:activate_toggle' target.pk %}"></a>
                         <a class="target_remove text-danger" href="{% url 'parser:remove_target' target.pk %}"><i class="ti-trash"></i></a>
                     </td>

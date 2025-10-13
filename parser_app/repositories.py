@@ -5,14 +5,16 @@ from parser_app.models import TargetsModel, TargetSettingsModel
 
 class ParserRepository:
 
-    def __init__(self, **kwargs):
-        if kwargs.get('user', None) is not None:
+    def __init__(self, user=None, **kwargs):
+        if user is not None:
+            self.user = user
+        elif kwargs.get('user', None) is not None:
             self.user = kwargs.get('user')
 
-    @staticmethod
-    def create_target(title, url, target_type=TargetsModel.SIMPLE, params=None):
+    def create_target(self, title, url, target_type=TargetsModel.SIMPLE, params=None):
         with transaction.atomic():
             target = TargetsModel.objects.create(
+                user=self.user,
                 title=title,
                 url=url,
                 type=int(target_type)
@@ -24,16 +26,46 @@ class ParserRepository:
                         type=int(setting.get('checking_type')),
                         type_param=setting.get('type_param', ''),
                         block=setting.get('block'),
-                        message=''
                     )
 
-    @staticmethod
-    def get_targets_list():
-        return TargetsModel.objects.all()
+    def edit_target(self, pk, title, url, target_type=TargetsModel.SIMPLE, params=None):
+        with transaction.atomic():
+            try:
+                target = TargetsModel.objects.get(user=self.user, pk=pk)
+            except TargetsModel.DoesNotExist:
+                return
+            target.title = title
+            target.url = url
+            target.type = int(target_type)
+            target.save()
+            if int(target_type) == TargetsModel.DIFFICULT and params is not None:
+                target.settings.all().delete()
+                for setting in params:
+                    TargetSettingsModel.objects.create(
+                        target=target,
+                        type=int(setting.get('checking_type')),
+                        type_param=setting.get('type_param', ''),
+                        block=setting.get('block'),
+                    )
 
-    @staticmethod
-    def get_active_targets_list():
-        return TargetsModel.objects.filter(activate=True)
+    def get_target(self, pk):
+        try:
+            return TargetsModel.objects.get(user=self.user, pk=pk)
+        except Exception as e:
+            print(e)
+            return None
+
+    def get_targets_list_count(self):
+        return TargetsModel.objects.filter(user=self.user).count()
+
+    def get_targets_list(self):
+        return TargetsModel.objects.filter(user=self.user)
+
+    def get_active_targets_list_count(self):
+        return TargetsModel.objects.filter(user=self.user, activate=True).count()
+
+    def get_active_targets_list(self):
+        return TargetsModel.objects.filter(user=self.user, activate=True)
 
     @staticmethod
     def change_status(target, target_status):
@@ -41,15 +73,13 @@ class ParserRepository:
         target.status_changed = timezone.now()
         target.save()
 
-    @staticmethod
-    def toggle_target(target_pk):
-        target = TargetsModel.objects.get(pk=target_pk)
+    def toggle_target(self, target_pk):
+        target = TargetsModel.objects.get(user=self.user, pk=target_pk)
         target.activate = not target.activate
         target.save()
 
-    @staticmethod
-    def remove_target(target_pk):
-        TargetsModel.objects.get(pk=target_pk).delete()
+    def remove_target(self, target_pk):
+        TargetsModel.objects.get(user=self.user, pk=target_pk).delete()
 
     @staticmethod
     def get_types():

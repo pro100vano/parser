@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Добавить проверку{% endblock %}
+{% block title %}Изменить проверку{% endblock %}
 
 
 {% block breadcrumb %}
     <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}"><i class="ti-home"></i> Главная</a></li>
     <li class="breadcrumb-item"><i class="ti-layers-alt"></i> Проверка</li>
     <li class="breadcrumb-item active"><a href="{% url 'main:targets:list' %}"><i class="ti-list"></i> Список</a></li>
-    <li class="breadcrumb-item active"><i class="ti-plus"></i> Добавить</li>
+    <li class="breadcrumb-item active"><i class="ti-pencil"></i> Изменить</li>
 {% endblock %}
 
 {% block content %}
@@ -17,50 +17,52 @@
                 <form class="form">
                     {% csrf_token %}
                     <div class="card-header uppercase">
-                        Добавить проверку
+                        Изменить проверку
                     </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label for="title">Заголовок</label>
                             <input type="text" id="title" name="title" class="form-control"
-                                   placeholder="Проверка Авито" required>
+                                   placeholder="Проверка Авито" value="{{ target.title }}" required>
                         </div>
                         <div class="form-group">
                             <label for="link">Ссылка</label>
                             <input type="text" id="link" name="link" class="form-control"
-                                   placeholder="https://example.com" required>
+                                   placeholder="https://example.com" value="{{ target.url }}" required>
                         </div>
                         <div class="form-group">
                             <label for="target_type">Тип проверки</label>
                             <select class="form-control" id="target_type" name="type">
                                 {% for type in types %}
-                                    <option value="{{ type.0 }}">{{ type.1 }}</option>
+                                    <option value="{{ type.0 }}"{% if target.type == type.0 %} selected{% endif %}>{{ type.1 }}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
-                        <div class="list-group d-none" id="rows">
+                        <div class="list-group {% if target.type != 1 %}d-none{% endif %}" id="rows">
 
-                            <div class="row list-group-item bg-custom-dark">
-                                <span class="remove_param text-danger"><i class="ti-trash"></i></span>
-                                <div class="form-group col-12">
-                                    <label for="checking_type">Что проверяем</label>
-                                    <select class="form-control" id="checking_type">
-                                        {% for type in checking_types %}
-                                            <option value="{{ type.0 }}">{{ type.1 }}</option>
-                                        {% endfor %}
-                                    </select>
+                            {% for setting in target.settings.all %}
+                                <div class="row list-group-item bg-custom-dark">
+                                    <span class="remove_param text-danger"><i class="ti-trash"></i></span>
+                                    <div class="form-group col-12">
+                                        <label for="checking_type">Что проверяем</label>
+                                        <select class="form-control" id="checking_type">
+                                            {% for type in checking_types %}
+                                                <option value="{{ type.0 }}"{% if setting.type == type.0 %} selected{% endif %}>{{ type.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label for="block">Проверяемый блок</label>
+                                        <input type="text" id="block" class="form-control"
+                                               placeholder="body .example .class" value="{{ setting.block }}">
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <label for="type_param">Доп. параметр</label>
+                                        <input type="text" id="type_param" class="form-control" value="{{ setting.type_param }}">
+                                    </div>
                                 </div>
-                                <div class="form-group col-12">
-                                    <label for="block">Проверяемый блок</label>
-                                    <input type="text" id="block" class="form-control"
-                                           placeholder="body .example .class">
-                                </div>
-                                <div class="form-group col-12">
-                                    <label for="type_param">Доп. параметр</label>
-                                    <input type="text" id="type_param" class="form-control">
-                                </div>
-                            </div>
+                            {% endfor %}
 
                             <div class="d-flex justify-content-end mt-2" style="order: 1">
                                 <button class="btn btn-flat btn-outline-success" id="add_row">Добавить</button>
@@ -146,7 +148,7 @@
                     data.push({name: 'params', value: JSON.stringify(params)});
                 }
                 $.ajax({
-                    url: '{% url "main:targets:create" %}',
+                    url: '{% url "main:targets:edit" target.pk %}',
                     method: 'POST',
                     data: data
                 }).done((response) => {

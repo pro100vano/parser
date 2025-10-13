@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Уведомления{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}"><i class="ti-home"></i> Главная</a></li>
+    <li class="breadcrumb-item active"><i class="ti-list"></i> Уведомления</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6 col-xs-12">
+            <div class="card">
+                <div class="card-header uppercase">
+                    Уведомления
+                </div>
+                <div class="card-body p-0">
+                    {% for notification in notifications %}
+                        <div class="notification_item">
+                            <i class="fa fa-clock-o"></i>
+                            <span>{{ notification.message }}</span>
+                            <span class="text-secondary">{{ notification.date_created }}</span>
+                        </div>
+                    {% empty %}
+                        <p class="text-secondary p-2 text-center">Список пуст</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $('#notifications_wrapper .badge').text('').addClass('hide');
+    </script>
+{% endblock %}

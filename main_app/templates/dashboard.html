@@ -5,3 +5,43 @@
 {% block breadcrumb %}
     <li class="breadcrumb-item active"><i class="ti-home"></i> Главная</li>
 {% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4 col-xs-12">
+            <div class="card mb-3">
+                <a class="card-body" href="{% url 'main:targets:list' %}">
+                    <div class="icon-left text-primary"><i class="ti-layers-alt"></i></div>
+                    <div class="number-right text-right">
+                        <h6 class="bold text-secondary">Проверки</h6>
+                        <h3 class="card-title text-primary bold">Активно {{ active_targets_count }} из {{ targets_count }}</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+            <div class="card mb-3">
+                <a class="card-body" href="{% url 'main:documentation' %}">
+                    <div class="icon-left text-warning"><i class="ti-agenda"></i></div>
+                    <div class="number-right text-right">
+                        <h6 class="bold text-secondary">Инструкции</h6>
+                        <h3 class="card-title text-warning bold">Документация</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12">
+            <div class="card mb-3">
+                <a class="card-body" href="{% url 'main:settings' %}">
+                    <div class="icon-left text-bubblegum"><i class="ti-settings"></i></div>
+                    <div class="number-right text-right">
+                        <h6 class="bold text-secondary">Настройка</h6>
+                        <h3 class="card-title text-bubblegum bold">Общие настройки</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Настройки{% endblock %}
+
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'main:dashboard' %}"><i class="ti-home"></i> Главная</a></li>
+    <li class="breadcrumb-item active"><i class="ti-settings"></i> Настройки</li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    Уведомления Telegram
+                </div>
+                <div class="card-body">
+                    {% for tg_user in tg_users %}
+                        <div class="border-bottom py-2">
+                            Пользователь с id: <b class="text-apple">{{ tg_user.tg_id }}</b>
+                            <a href="{% url "notifications:tg_user_remove" tg_user.pk %}"><i class="ti-trash text-danger"></i></a>
+                        </div>
+                    {% empty %}
+                        Пользователей еще нет
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <form action="{% url "notifications:tg_user_add" %}" method="post">
+                        {% csrf_token %}
+                        <h5 class="text-info">Добавить пользователя</h5>
+                        <div class="form-group">
+                            <label for="tg_id">Telegram ID</label>
+                            <input type="text" id="tg_id" name="tg_id" class="form-control" placeholder="123456789" required>
+                        </div>
+                        <div class="d-flex justify-content-end mt-2">
+                            <button class="btn btn-flat btn-outline-success">Добавить</button>
+                        </div>
+                    </form>
+
+                    <div>
+                        <a href="https://t.me/marmax_check_bot" target="_blank">Telegram-bot</a> для уведомлений
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

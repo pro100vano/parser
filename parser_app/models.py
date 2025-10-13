@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class TargetsModel(models.Model):
@@ -26,6 +27,8 @@ class TargetsModel(models.Model):
         (CIAN, "Циан"),
     )
 
+    user = models.ForeignKey(User, verbose_name='Пользователь', related_name='parser_owner', on_delete=models.CASCADE,
+                             blank=False, null=False)
     title = models.CharField(max_length=100, verbose_name="Наименование")
     url = models.TextField(verbose_name="Ссылка")
     type = models.SmallIntegerField(verbose_name='Тип', choices=TARGET_TYPE, default=0)
@@ -60,11 +63,17 @@ class TargetSettingsModel(models.Model):
     NOT_EMPTY = 0
     LESS_ENTRIES = 1
     MORE_ENTRIES = 2
+    CONTAINS = 3
+    STARTS = 4
+    ENDS = 5
 
     CHECKING_TYPE = (
         (NOT_EMPTY, 'Блок не пустой'),
         (LESS_ENTRIES, 'Элементов меньше чем'),
-        (MORE_ENTRIES, 'Элементов больше чем')
+        (MORE_ENTRIES, 'Элементов больше чем'),
+        (CONTAINS, 'Содержит'),
+        (STARTS, 'Начинается с'),
+        (ENDS, 'Заканчивается'),
     )
 
     target = models.ForeignKey(TargetsModel, verbose_name="Цель", related_name="settings", null=False, blank=False,
@@ -72,7 +81,6 @@ class TargetSettingsModel(models.Model):
     type = models.SmallIntegerField(verbose_name='Тип', choices=CHECKING_TYPE, default=0)
     type_param = models.CharField(max_length=255, verbose_name="Дополнительный параметр", blank=True)
     block = models.TextField(verbose_name="Проверяемый блок", default='')
-    message = models.TextField('Test')
 
     def __str__(self):
         return f"Настройка для {self.target.title}"

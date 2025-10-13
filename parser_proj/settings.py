@@ -166,4 +166,5 @@ PUBLIC_URLS = [
     r'^/auth/*',
     r'^/logout/*',
     r'^/parser/start/*',
+    r'^/notifications/test/*',
 ]

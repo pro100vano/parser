@@ -25,7 +25,7 @@ urlpatterns = [
     path('auth/', LoginView.as_view(template_name="auth.html", next_page=reverse_lazy("main:dashboard")), name='auth'),
     path('logout/', LogoutView.as_view(next_page=reverse_lazy("auth")), name="logout"),
     path('', include('main_app.urls')),
-    path('notificatios/', include('notifications_app.urls')),
+    path('notifications/', include('notifications_app.urls')),
     path('parser/', include('parser_app.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
               static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
