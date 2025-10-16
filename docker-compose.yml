@@ -3,7 +3,7 @@ services:
     image: redis:latest
     restart: always
   db:
-    image: postgres:lastest
+    image: postgres
     restart: always
     hostname: postgres
     environment:
