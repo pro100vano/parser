@@ -3,7 +3,7 @@ services:
     image: redis:latest
     restart: always
   db:
-    image: postgres
+    image: postgres:14.19-alpine
     restart: always
     hostname: postgres
     environment:
