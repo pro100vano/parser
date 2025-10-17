@@ -16,4 +16,5 @@ urlpatterns = [
     path('reminder/', views.Reminder.as_view(), name='reminder'),
     path('settings/', views.Settings.as_view(), name='settings'),
     path('documentation/', views.Documentation.as_view(), name='documentation'),
+    path('webhook/', views.TgHooks.as_view(), name='tg_hook'),
 ]

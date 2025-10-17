@@ -113,3 +113,10 @@ class Documentation(APIView):
             request=request,
             template_name='documentation.html'
         )
+
+
+class TgHooks(APIView):
+
+    def post(self, request):
+        print(request.data)
+        return JsonResponse({"detail": "OK"}, status=200)
