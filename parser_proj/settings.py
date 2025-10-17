@@ -172,4 +172,5 @@ PUBLIC_URLS = [
     r'^/logout/*',
     r'^/parser/start/*',
     r'^/notifications/test/*',
+    r'^/webhook/*',
 ]
