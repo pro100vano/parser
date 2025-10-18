@@ -119,3 +119,8 @@ body.theme-dark .header>.header-bar .navigation .navbar-menu .menu-item>.dropdow
 .notification_item:hover{
     background-color: #333333;
 }
+
+#tg_code:hover{
+    cursor: pointer;
+    color: #97dcff!important;
+}

@@ -1,8 +1,9 @@
 import asyncio
+import random
 
 import requests
 from django.contrib.auth.models import User
-from notifications_app.models import NotificationModel, TgAccounts
+from notifications_app.models import NotificationModel, TgAccounts, TgCode
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -102,6 +103,14 @@ class TgNotificationsRepository:
             TgAccounts.objects.get(user=self.user, pk=pk).delete()
         except Exception as e:
             print(e)
+
+    def get_code(self):
+        code = TgCode.objects.get_or_create(user=self.user)[0]
+        if code.code.__len__() < 1:
+            length = random.randint(5, 10)
+            code.code = ''.join(random.choice('0123456789') for _ in range(length))
+            code.save()
+        return code.code
 
     def command_start(self, data):
         pass

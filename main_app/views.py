@@ -98,6 +98,7 @@ class Settings(APIView):
 
     def get(self, request):
         context = dict()
+        context['tg_code'] = TgNotificationsRepository(request.user).get_code()
         context['tg_users'] = TgNotificationsRepository(request.user).get_list()
         return render(
             request=request,
@@ -118,7 +119,7 @@ class Documentation(APIView):
 class TgHooks(APIView):
 
     def post(self, request):
-        print(json.loads(request.data))
+        print(request.data.get('text').strip())
         print(request.data)
 
         return JsonResponse({"detail": "OK"}, status=200)

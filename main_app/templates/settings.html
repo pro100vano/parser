@@ -39,7 +39,8 @@
                     </form>
 
                     <div>
-                        <a href="https://t.me/marmax_check_bot" target="_blank">Telegram-bot</a> для уведомлений
+                        <a href="https://t.me/marmax_check_bot" target="_blank">Telegram-bot</a> для уведомлений<br>
+                        Код подтверждения <span class="text-info" id="tg_code" data-src="{{ tg_code }}">{{ tg_code }}</span>
                     </div>
                 </div>
             </div>
@@ -48,4 +49,13 @@
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        $(document).ready(function (){
+            $('#tg_code').on('click', function (e){
+                e.preventDefault();
+                navigator.clipboard.writeText($(this).attr('data-src'));
+                alert(`"${$(this).attr('data-src')}" скопировано в буфер обмена!`)
+            })
+        })
+    </script>
 {% endblock %}
