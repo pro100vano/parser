@@ -27,3 +27,8 @@ class TgAccounts(models.Model):
     class Meta:
         verbose_name = "Телеграм аккаут"
         verbose_name_plural = "Телеграм аккауты"
+
+
+class TgCode(models.Model):
+    user = models.OneToOneField(User, verbose_name="Пользователь", on_delete=models.CASCADE, null=False, blank=False)
+    code = models.TextField(verbose_name="Код подтверждения")

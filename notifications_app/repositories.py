@@ -102,3 +102,6 @@ class TgNotificationsRepository:
             TgAccounts.objects.get(user=self.user, pk=pk).delete()
         except Exception as e:
             print(e)
+
+    def command_start(self, data):
+        pass
