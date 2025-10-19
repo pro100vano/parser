@@ -74,6 +74,7 @@ class TgNotificationsRepository:
             self.user = kwargs.get('user')
 
     async def send_message(self, tg_user_id, message):
+        print(tg_user_id)
         params = {
             'chat_id': tg_user_id,
             'parse_mode': 'html',
