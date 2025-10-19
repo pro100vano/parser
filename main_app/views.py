@@ -121,9 +121,12 @@ class TgHooks(APIView):
     def post(self, request):
         print(request.data)
         command = request.data.get('message').get('text')
+        print(command)
         if command == '/start':
+            print(1)
             TgNotificationsRepository().command_start(request.data)
-        if command.startswith('/con'):
+        if command.startswith('/connect'):
+            print(2)
             TgNotificationsRepository().command_con(request.data)
 
         return JsonResponse({"detail": "OK"}, status=200)
