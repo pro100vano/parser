@@ -113,4 +113,38 @@ class TgNotificationsRepository:
         return code.code
 
     def command_start(self, data):
-        pass
+        try:
+            tg_id = data.get('message').get('from').get('id')
+            message = f"Добро пожаловать!\n" \
+                      f"Этот бот создан для уведомлений о ходу проверок вне системы\n" \
+                      f"Условные обозначения:\n" \
+                      f"🟢 - с ресурсом все хорошо\n" \
+                      f"🟠 - ресурс доступен, но имеются проблемы с конетентом\n" \
+                      f"🔴 - ресурс не доступен\n\n" \
+                      f"Для подключения введите ваш telegram id на странице настроек,\n" \
+                      f"либо используйте команду: \"/con <код подтверждения>\"\n" \
+                      f"Ваш telegram id: {tg_id}\n" \
+                      f"Код подтверждения находится на странице настроек"
+            self.send_message(tg_id, message)
+        except Exception as e:
+            print(e)
+            return False
+
+    def command_con(self, data):
+        try:
+            tg_id = data.get('message').get('from').get('id')
+            command = data.get('message').get('text')
+            params = command.split(' ')
+            if params.__len__() > 1 and params[1].__len__() > 0:
+                try:
+                    user = TgCode.objects.get(code=str(params[1]).strip()).user
+                    TgAccounts.objects.get_or_create(user=user, tg_id=tg_id)
+                    message = f"✅ Прикриплен к пользователю {user.username}"
+                except TgCode.DoesNotExist:
+                    message = "❌ Такого кода подтверждения не существует"
+            else:
+                message = "Для подключения, введите команду \"/con <код подтверждения>\"\n"
+            self.send_message(tg_id, message)
+        except Exception as e:
+            print(e)
+            return False
