@@ -15,17 +15,25 @@ services:
     ports:
       - 5433:5432
   celery:
-    build: .
+    build:
+      context: .
+      network: host
     command: celery -A parser_proj worker -l info
     volumes:
       - ./:/usr/src/app/
+    environment:
+      - DEBUG=1
     depends_on:
       - redis
   celery-beat:
-    build: .
+    build:
+      context: .
+      network: host
     command: celery -A parser_proj beat -l info
     volumes:
       - ./:/usr/src/app/
+    environment:
+      - DEBUG=1
     depends_on:
       - redis
   daphne:
