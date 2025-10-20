@@ -1,7 +1,7 @@
 import asyncio
 import random
-
 import requests
+from django.conf import settings
 from django.contrib.auth.models import User
 from notifications_app.models import NotificationModel, TgAccounts, TgCode
 from channels.layers import get_channel_layer
@@ -65,7 +65,7 @@ class NotificationRepository:
 class TgNotificationsRepository:
 
     url = 'https://api.telegram.org/bot'
-    token = "8208541014:AAEJdxKg6FEFciTC7_CZnPE_WwE8NqJrURs"
+    token = getattr(settings, 'TG_TOKEN', '')
 
     def __init__(self, user=None, **kwargs):
         if user is not None:
@@ -73,7 +73,7 @@ class TgNotificationsRepository:
         elif kwargs.get('user', None) is not None:
             self.user = kwargs.get('user')
 
-    async def send_message(self, tg_user_id, message):
+    async def asend_message(self, tg_user_id, message):
         print(tg_user_id)
         params = {
             'chat_id': tg_user_id,
@@ -87,9 +87,12 @@ class TgNotificationsRepository:
             print(e)
             return False
 
-    async def send_message_all(self, message):
+    def send_message(self, tg_user_id, message):
+        asyncio.create_task(self.asend_message(tg_user_id, message))
+
+    async def asend_message_all(self, message):
         async for tg_user in TgAccounts.objects.filter(user=self.user):
-            asyncio.create_task(self.send_message(tg_user.tg_id, message))
+            asyncio.create_task(self.asend_message(tg_user.tg_id, message))
 
     def get_list(self):
         return TgAccounts.objects.filter(user=self.user)

@@ -166,6 +166,7 @@ PRIVATE_STORAGE_ROOT = os.path.join(BASE_DIR, 'files', 'upload')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+TG_TOKEN = env.str('TG_TOKEN')
 
 PUBLIC_URLS = [
     r'^/auth/*',

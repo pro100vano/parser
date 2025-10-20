@@ -17,7 +17,7 @@ class Notification(APIView):
 class NotificationTg(APIView):
 
     def post(self, request):
-        TgNotificationsRepository().send_message_all(request.data.get('message'))
+        TgNotificationsRepository().asend_message_all(request.data.get('message'))
         return JsonResponse({"detail": "OK"}, status=200)
 
 

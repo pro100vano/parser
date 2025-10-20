@@ -44,7 +44,7 @@ class Parser:
             else:
                 notification_message += f"🔴\"{target.title}\" не доступен\n"
                 NotificationRepository(self.user).create_notification(f"\"{target.title}\" не доступен")
-        async_to_sync(TgNotificationsRepository(self.user).send_message_all)(notification_message)
+        async_to_sync(TgNotificationsRepository(self.user).asend_message_all)(notification_message)
 
     def simple_parser(self, target):
         headers = {'User-Agent': 'Mozilla/5.0'}
