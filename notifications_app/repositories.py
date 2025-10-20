@@ -83,6 +83,7 @@ class TgNotificationsRepository:
         try:
             request = requests.get(f"{self.url}{self.token}/sendMessage", params=params)
             print(request.status_code)
+            print(request.text)
             return True
         except Exception as e:
             print(e)
