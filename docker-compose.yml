@@ -22,7 +22,16 @@ services:
     volumes:
       - ./:/usr/src/app/
     environment:
-      - DEBUG=1
+      DB_HOST: db
+      REDIS_HOST: redis
+      MACHINE_HOST: 127.0.0.1
+      HOST_IP: ${HOST_IP}
+      HOST_PORT: ${DAPHNE_PORT}
+      NGINX_PORT: ${NGINX_PORT}
+      HOST_DOMAIN: ${HOST_DOMAIN}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       - redis
   celery-beat:
@@ -33,7 +42,16 @@ services:
     volumes:
       - ./:/usr/src/app/
     environment:
-      - DEBUG=1
+      DB_HOST: db
+      REDIS_HOST: redis
+      MACHINE_HOST: 127.0.0.1
+      HOST_IP: ${HOST_IP}
+      HOST_PORT: ${DAPHNE_PORT}
+      NGINX_PORT: ${NGINX_PORT}
+      HOST_DOMAIN: ${HOST_DOMAIN}
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       - redis
   daphne:
