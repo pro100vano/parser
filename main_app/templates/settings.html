@@ -45,6 +45,34 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-6 col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    Периодические задачи
+                </div>
+                <div class="card-body">
+                    {% for task in tasks %}
+                        {{ task }}
+                        <a href="{% url "parser:period_remove" task.pk %}"><i class="ti-trash text-danger"></i></a>
+                    {% empty %}
+                        Интервалы не настроены
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <form action="{% url "parser:period_create" %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="period_time"></label>
+                            <input type="time" name="time" class="form-control" id="period_time" placeholder="Время">
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-2">
+                            <button class="btn btn-flat btn-outline-success">Добавить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

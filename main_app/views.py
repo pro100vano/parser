@@ -6,6 +6,7 @@ from rest_framework.reverse import reverse_lazy
 from rest_framework.views import APIView
 
 from notifications_app.repositories import TgNotificationsRepository
+from parser_app.models import UserPeriodicTasksModel
 from parser_app.repositories import ParserRepository
 
 
@@ -100,6 +101,7 @@ class Settings(APIView):
         context = dict()
         context['tg_code'] = TgNotificationsRepository(request.user).get_code()
         context['tg_users'] = TgNotificationsRepository(request.user).get_list()
+        context['tasks'] = UserPeriodicTasksModel.objects.filter(user=request.user)
         return render(
             request=request,
             template_name='settings.html',

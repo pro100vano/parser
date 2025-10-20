@@ -8,5 +8,8 @@ urlpatterns = [
     path('start/', views.StartParser.as_view(), name="start"),
 
     path('<int:pk>/activate/toggle/', views.ToggleTarget.as_view(), name='activate_toggle'),
-    path('<int:pk>/remove/', views.RemoveTarget.as_view(), name='remove_target')
+    path('<int:pk>/remove/', views.RemoveTarget.as_view(), name='remove_target'),
+
+    path('period/create/', views.CreatePeriod.as_view(), name='period_create'),
+    path('period/<int:pk>/remove/', views.RemovePeriod.as_view(), name='period_remove'),
 ]

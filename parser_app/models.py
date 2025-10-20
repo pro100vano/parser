@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django_celery_beat.models import PeriodicTask
 
 
 class TargetsModel(models.Model):
@@ -59,7 +60,6 @@ class TargetsModel(models.Model):
 
 
 class TargetSettingsModel(models.Model):
-
     NOT_EMPTY = 0
     LESS_ENTRIES = 1
     MORE_ENTRIES = 2
@@ -88,3 +88,21 @@ class TargetSettingsModel(models.Model):
     class Meta:
         verbose_name = "Настройки сайта"
         verbose_name_plural = "Настройки сайтов"
+
+
+class UserPeriodicTasksModel(models.Model):
+    user = models.ForeignKey(User, verbose_name="Пользователь", related_name='periodic_user', null=False,
+                             blank=False, on_delete=models.CASCADE)
+    task = models.OneToOneField(PeriodicTask, verbose_name="Задача", related_name='periodic_user', null=False,
+                                blank=False, on_delete=models.CASCADE)
+
+    def __str__(self):
+        if len(self.task.crontab.minute) < 2:
+            minutes = "0" + self.task.crontab.minute
+        else:
+            minutes = self.task.crontab.minute
+        return f"Выполнить проверку каждый день в {self.task.crontab.hour}:{minutes}"
+
+    class Meta:
+        verbose_name = "Периодическая задача пользователя"
+        verbose_name_plural = "Периодические задачи пользователя"

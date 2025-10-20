@@ -1,4 +1,6 @@
 import json
+import random
+import string
 
 from django.shortcuts import render
 from django.utils import timezone
@@ -6,9 +8,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.reverse import reverse_lazy
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponseRedirect
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 from rest_framework.authtoken.models import Token
 
+from notifications_app.repositories import NotificationRepository
+from parser_app.models import UserPeriodicTasksModel
 from parser_app.repositories import ParserRepository
 from parser_app.utils import Parser
 
@@ -30,12 +34,11 @@ class Test(APIView):
 
 
 class StartParser(APIView):
-    permission_classes = (AllowAny, )
 
     def post(self, request):
-        user = Token.objects.get(key=request.headers.get('Authorization')).user
-        targets = ParserRepository(user).get_active_targets_list()
-        Parser(user).start_parser(targets)
+        targets = ParserRepository(request.user).get_active_targets_list()
+        Parser(request.user).start_parser(targets)
+        NotificationRepository(request.user).create_notification(f"Проверка выполнена!")
         return JsonResponse({"status": "OK"}, status=200)
 
 
@@ -52,3 +55,34 @@ class RemoveTarget(APIView):
         ParserRepository(request.user).remove_target(kwargs.get('pk'))
         return HttpResponseRedirect(reverse_lazy('main:targets:list'))
 
+
+class CreatePeriod(APIView):
+
+    def post(self, request):
+        title = ''.join(random.choice(string.ascii_letters) for _ in range(20))
+        _time = request.data.get('time').split(':')
+        hour = _time[0]
+        minute = _time[1]
+        task = PeriodicTask.objects.create(
+            name=title,
+            task="parser_start",
+            crontab=CrontabSchedule.objects.get_or_create(hour=hour, minute=minute)[0],
+            # interval=IntervalSchedule.objects.get_or_create(every=10, period='seconds')[0],
+            kwargs=json.dumps({"user_id": request.user.id}),
+            start_time=timezone.now(),
+        )
+        UserPeriodicTasksModel.objects.create(
+            user=request.user,
+            task=task
+        )
+        return HttpResponseRedirect(reverse_lazy('main:settings'))
+
+
+class RemovePeriod(APIView):
+
+    def get(self, request, **kwargs):
+        try:
+            UserPeriodicTasksModel.objects.get(pk=kwargs.get('pk')).task.delete()
+        except UserPeriodicTasksModel.DoesNotExist:
+            pass
+        return HttpResponseRedirect(reverse_lazy('main:settings'))

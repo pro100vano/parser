@@ -22,6 +22,18 @@
         </div>
         <div class="col-md-4 col-xs-12">
             <div class="card mb-3">
+                <a class="card-body" href="{% url 'parser:start' %}" id="start_parser">
+                    <div class="icon-left text-primary"><i class="ti-control-play"></i></div>
+                    <div class="number-right text-right">
+                        <h6 class="bold text-secondary">Проверки</h6>
+                        <h3 class="card-title text-primary bold" id="parser_info">Запустить</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4 col-xs-12"></div>
+        <div class="col-md-4 col-xs-12">
+            <div class="card mb-3">
                 <a class="card-body" href="{% url 'main:documentation' %}">
                     <div class="icon-left text-warning"><i class="ti-agenda"></i></div>
                     <div class="number-right text-right">
@@ -31,6 +43,7 @@
                 </a>
             </div>
         </div>
+        <div class="col-md-8 col-xs-12"></div>
         <div class="col-md-4 col-xs-12">
             <div class="card mb-3">
                 <a class="card-body" href="{% url 'main:settings' %}">
@@ -44,4 +57,37 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let parser_process = false;
+        document.querySelector('#start_parser').addEventListener('click', function (e){
+            e.preventDefault();
+            if (parser_process){
+                return false;
+            }
+            let $info = document.querySelector('#parser_info');
+            parser_process = true;
+            $info.innerText = "Выполняется...";
+            let url = this.href;
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: null
+            }).then(response => {
+                if (response.status === 200){
+                    $info.innerText = "Выполнено";
+                    setTimeout(() => {
+                        $info.innerText = "Запустить";
+                        parser_process = false;
+                    }, 2000)
+                }else{
+                    $info.innerText = "Что-то пошло не так!";
+                }
+            })
+        });
+    </script>
 {% endblock %}
