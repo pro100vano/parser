@@ -88,7 +88,7 @@ class TgNotificationsRepository:
             return False
 
     def send_message(self, tg_user_id, message):
-        asyncio.create_task(self.asend_message(tg_user_id, message))
+        async_to_sync(self.asend_message)(tg_user_id, message)
 
     async def asend_message_all(self, message):
         async for tg_user in TgAccounts.objects.filter(user=self.user):
