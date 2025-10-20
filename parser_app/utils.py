@@ -40,7 +40,7 @@ class Parser:
                     notification_message += f"🟢\"{target.title}\" доступен. "
                 else:
                     notification_message += f"🟠\"{target.title}\" доступен, но имеет ошибки. "
-                notification_message += f"Загружен за {round(load_time, 3)} сек.\n"
+                notification_message += f"Отклик: {round(load_time, 3)} сек.\n"
             else:
                 notification_message += f"🔴\"{target.title}\" не доступен\n"
                 NotificationRepository(self.user).create_notification(f"\"{target.title}\" не доступен")
