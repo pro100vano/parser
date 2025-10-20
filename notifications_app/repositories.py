@@ -79,11 +79,8 @@ class TgNotificationsRepository:
             'parse_mode': 'html',
             'text': message
         }
-        print(params)
         try:
-            request = requests.get(f"{self.url}{self.token}/sendMessage", params=params)
-            print(request.status_code)
-            print(request.text)
+            requests.get(f"{self.url}{self.token}/sendMessage", params=params)
             return True
         except Exception as e:
             print(e)
@@ -128,8 +125,8 @@ class TgNotificationsRepository:
                       f"🟠 - ресурс доступен, но имеются проблемы с конетентом\n" \
                       f"🔴 - ресурс не доступен\n\n" \
                       f"Для подключения введите ваш telegram id на странице настроек,\n" \
-                      f"либо используйте команду: \"/connect [код подтверждения]\"\n" \
-                      f"Ваш telegram id: {tg_id}\n" \
+                      f"либо используйте команду: \"/con [код подтверждения]\"\n" \
+                      f"Ваш telegram id: <b>{tg_id}</b>\n" \
                       f"Код подтверждения находится на странице настроек"
             self.send_message(tg_id, message)
         except Exception as e:
@@ -149,7 +146,7 @@ class TgNotificationsRepository:
                 except TgCode.DoesNotExist:
                     message = "❌ Такого кода подтверждения не существует"
             else:
-                message = "Для подключения, введите команду \"/connect [код подтверждения]\"\n"
+                message = "Для подключения, введите команду \"/con [код подтверждения]\"\n"
             self.send_message(tg_id, message)
         except Exception as e:
             print(e)
