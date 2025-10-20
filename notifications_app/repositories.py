@@ -156,7 +156,7 @@ class TgNotificationsRepository:
         try:
             tg_id = data.get('message').get('from').get('id')
             message = "Данный аккаунт привязан к следующим пользователям:\n"
-            for tg in TgAccounts.objects.get_or_create(tg_id=tg_id):
+            for tg in TgAccounts.objects.filter(tg_id=tg_id):
                 message += f"{tg.user.username}\n"
             self.send_message(tg_id, message)
         except Exception as e:
