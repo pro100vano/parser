@@ -79,6 +79,7 @@ class TgNotificationsRepository:
             'parse_mode': 'html',
             'text': message
         }
+        print(params)
         try:
             requests.get(f"{self.url}{self.token}/sendMessage", params=params)
             return True
