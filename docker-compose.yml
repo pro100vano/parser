@@ -19,7 +19,7 @@ services:
       context: .
       network: host
     restart: always
-    command: bash -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && python3 manage.py seed all && daphne -b 0.0.0.0 -p ${DAPHNE_PORT} parser_proj.asgi:application"
+    command: bash -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && python3 manage.py seed all && daphne -b 0.0.0.0 -p ${DAPHNE_PORT} parser_proj.asgi:application && celery -A parser_proj worker -l INFO --pool=solo"
     environment:
       DB_HOST: db
       REDIS_HOST: redis
