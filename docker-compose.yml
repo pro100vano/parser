@@ -14,6 +14,32 @@ services:
       - ./data/db:/var/lib/postgresql/data
     ports:
       - 5433:5432
+  celery-worker:
+    build:
+    context: ./app
+    container_name: celery-worker
+    entrypoint: celery
+    command: -A celery_app.celery worker --loglevel=info
+    volumes:
+      - .:/var/www/app/worker
+    links:
+      - redis
+    depends_on:
+      - redis
+  celery-beat:
+    build:
+    context: ./app
+    container_name: celery-beat
+    entrypoint: celery
+    command: -A celery_app.celery beat --loglevel=info
+    volumes:
+      - .:/var/www/app/beat
+    links:
+      - celery-worker
+      - redis
+    depends_on:
+      - celery-worker
+      - redis
   daphne:
     build:
       context: .
@@ -36,5 +62,7 @@ services:
     depends_on:
       - db
       - redis
+      - celery-worker
+      - celery-beat
     volumes:
       - .:/code
