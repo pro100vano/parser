@@ -16,7 +16,8 @@ services:
       - 5433:5432
   celery-worker:
     build:
-    context: ./app
+      context: .
+      network: host
     container_name: celery-worker
     entrypoint: celery
     command: -A celery_app.celery worker --loglevel=info
@@ -28,7 +29,8 @@ services:
       - redis
   celery-beat:
     build:
-    context: ./app
+      context: .
+      network: host
     container_name: celery-beat
     entrypoint: celery
     command: -A celery_app.celery beat --loglevel=info
@@ -45,7 +47,7 @@ services:
       context: .
       network: host
     restart: always
-    command: bash -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && python3 manage.py seed all && daphne -b 0.0.0.0 -p ${DAPHNE_PORT} parser_proj.asgi:application && celery -A parser_proj worker -l INFO --pool=solo"
+    command: bash -c "python3 manage.py migrate && python3 manage.py collectstatic --noinput && python3 manage.py seed all && daphne -b 0.0.0.0 -p ${DAPHNE_PORT} parser_proj.asgi:application"
     environment:
       DB_HOST: db
       REDIS_HOST: redis
