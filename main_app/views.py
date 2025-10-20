@@ -124,5 +124,7 @@ class TgHooks(APIView):
             TgNotificationsRepository().command_start(request.data)
         if command.startswith('/con'):
             TgNotificationsRepository().command_con(request.data)
+        if command == '/list':
+            TgNotificationsRepository().command_list(request.data)
 
         return JsonResponse({"detail": "OK"}, status=200)

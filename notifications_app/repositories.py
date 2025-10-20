@@ -151,3 +151,14 @@ class TgNotificationsRepository:
         except Exception as e:
             print(e)
             return False
+
+    def command_list(self, data):
+        try:
+            tg_id = data.get('message').get('from').get('id')
+            message = "Данный аккаунт привязан к следующим пользователям:\n"
+            for tg in TgAccounts.objects.get_or_create(tg_id=tg_id):
+                message += f"{tg.user.username}\n"
+        except Exception as e:
+            print(e)
+            return False
+
