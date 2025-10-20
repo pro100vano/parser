@@ -75,12 +75,10 @@ class TgNotificationsRepository:
 
     async def asend_message(self, tg_user_id, message):
         params = {
-            'chat_id': tg_user_id,
+            'chat_id': str(tg_user_id),
             'parse_mode': 'html',
             'text': message
         }
-        print(params)
-        print(f"{self.url}{self.token}/sendMessage")
         try:
             requests.get(f"{self.url}{self.token}/sendMessage", params=params)
             return True
@@ -89,19 +87,7 @@ class TgNotificationsRepository:
             return False
 
     def send_message(self, tg_user_id, message):
-        params = {
-            'chat_id': tg_user_id,
-            'parse_mode': 'html',
-            'text': message
-        }
-        print(params)
-        print(f"{self.url}{self.token}/sendMessage")
-        try:
-            requests.get(f"{self.url}{self.token}/sendMessage", params=params)
-            return True
-        except Exception as e:
-            print(e)
-            return False
+        async_to_sync(self.asend_message)(tg_user_id, message)
 
     async def asend_message_all(self, message):
         async for tg_user in TgAccounts.objects.filter(user=self.user):
