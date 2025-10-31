@@ -21,56 +21,23 @@ body.theme-dark .sidebar-menu .active>a{
 .td_actions{
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
 }
 
-.target_activate{
-    display: inline-block;
-    height: 0;
-    width: 0;
+.target_start, .target_activate{
+    font-size: 22px;
 }
 
 .target_info{
     cursor: pointer;
     display: inline-block;
     padding: 0 5px;
-    width: 30px;
+    width: 25px;
+    font-size: 16px;
+}
+
+.target_edit, .target_remove{
     font-size: 20px;
-}
-
-.target_edit{
-    font-size: 20px;
-    margin-right: 7px;
-}
-
-.target_remove{
-    font-size: 20px;
-}
-
-.target_activate.bg-secondary{
-    background-color: transparent !important;
-    border-left: 12px solid #6c757d;
-    border-right: 6px solid transparent;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-}
-
-.target_activate.bg-secondary:hover{
-    background-color: transparent !important;
-    border-left-color: #545b62;
-}
-
-.target_activate.bg-success{
-    background-color: transparent !important;
-    border-left: 12px solid #17ba91;
-    border-right: 6px solid transparent;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-}
-
-.target_activate.bg-success:hover{
-    background-color: transparent !important;
-    border-left-color: #118d6e;
 }
 
 .remove_param{
@@ -123,4 +90,41 @@ body.theme-dark .header>.header-bar .navigation .navbar-menu .menu-item>.dropdow
 #tg_code:hover{
     cursor: pointer;
     color: #97dcff!important;
+}
+
+.sidebar .sidebar-menu .maincat .subcat li a:before{
+    display: none;
+}
+
+.collapse:not(.show){
+    display: block;
+}
+
+.accordion-body{
+    transition: .3s;
+    overflow: hidden;
+    font-size: 0;
+}
+
+.show .accordion-body{
+    font-size: 1rem;
+}
+
+.accordion-header{
+    color: #ffffff;
+}
+
+.accordion-header:hover{
+    cursor: pointer;
+    color: #aaaaaa;
+}
+
+#FaqAccordion1 .accordion-button::after {
+    background-image: none !important;
+}
+
+#FaqAccordion1 .accordion-button:not(.collapsed) {
+    background-color: transparent !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important
 }

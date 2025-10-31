@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from notifications_app.repositories import TgNotificationsRepository
 from parser_app.models import UserPeriodicTasksModel
 from parser_app.repositories import ParserRepository
+from parser_app.utils import Parser
 
 
 class Dashboard(APIView):
@@ -87,6 +88,14 @@ class EditTarget(APIView):
             params=settings
         )
         return JsonResponse({'detail': "OK", "redirect_to": reverse_lazy('main:targets:list')}, status=200)
+
+
+class StartTarget(APIView):
+
+    def get(self, request, **kwargs):
+        target = ParserRepository(request.user).get_target(pk=kwargs.get('pk'))
+        Parser(request.user).test_parser(target)
+        return HttpResponseRedirect(reverse_lazy('main:targets:list'))
 
 
 class Reminder(APIView):

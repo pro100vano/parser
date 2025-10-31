@@ -9,7 +9,169 @@
 
 
 {% block content %}
+
+
+    <div class="row accordion " id="FaqAccordion1">
+
+        <div class="col-md-12">
+
+            <div class="accordion-item mb-2 lc-block">
+                <h2 class="accordion-header">
+                    <span class="accordion-button collapsed" data-bs-target="#flush-collapse-1">
+                        <b class="h5 fw-bold">Как настроить проверку?</b>
+                    </span>
+                </h2>
+
+                <div id="flush-collapse-1" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Для настройки перейдите в:<br> <i class="ti-layers-alt"></i> Проверки / <i class="ti-plus"></i> Добавить.<br><br>
+                        - введите любой заголовк, для идентификации проверки<br>
+                        - введите url, который нужно проверять<br>
+                        - выберите соответствующий тип проверки, или "простую проверку" для всех других сайтов
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item mb-2 lc-block">
+                <h2 class="accordion-header">
+                    <span class="accordion-button collapsed" data-bs-target="#flush-collapse-2">
+                        <b class="h5 fw-bold">Как настроить сложную проверку?</b>
+                    </span>
+                </h2>
+
+                <div id="flush-collapse-2" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Существует несколько видов сложных проверок:<br><br>
+                        <b>Проверка заполнения блока</b><br>
+                        Определяет наличие элементов в выбранном блоке.<br>
+                        В поле «Проверяемый блок» укажите селектор с именем тега, например: <code>div.my_class</code> или <code>span#my_id</code>.<br>
+                        Поле «Дополнительный параметр» оставлять пустым.<br><br>
+
+                        <b>Количество элементов превышает указанное</b><br>
+                        Сравнивает количество элементов в блоке с установленным числом.<br>
+                        В поле «Проверяемый блок» укажите селектор с именем тега, например: <code>div.my_class</code> или <code>span#my_id</code>.<br>
+                        В поле «Дополнительный параметр» введите число для сравнения.<br><br>
+
+                        <b>Количество элементов ниже указанного</b><br>
+                        Сравнивает количество элементов в блоке с определенным числом.<br>
+                        В поле «Проверяемый блок» укажите селектор с именем тега, например: <code>div.my_class</code> или <code>span#my_id</code>.<br>
+                        В поле «Дополнительный параметр» введите число для сравнения.<br><br>
+
+                        <b>Соответствие содержанию</b><br>
+                        Проверяет совпадение контента блока с заданным текстом.<br>
+                        В поле «Проверяемый блок» укажите селектор с именем тега, например: <code>div.my_class</code> или <code>span#my_id</code>.<br>
+                        В поле «Дополнительный параметр» введите искомый текст.<br><br>
+
+                        <b>Начало контента</b><br>
+                        Проверяет, начинается ли контент блока с заданного фрагмента.<br>
+                        В поле «Проверяемый блок» укажите селектор с именем тега, например: <code>div.my_class</code> или <code>span#my_id</code>.<br>
+                        В поле «Дополнительный параметр» введите искомый фрагмент.<br><br>
+
+                        <b>Окончание контента</b><br>
+                        Проверяет, оканчивается ли контент блока заданным фрагментом.<br>
+                        В поле «Проверяемый блок» укажите селектор с именем тега, например: <code>div.my_class</code> или <code>span#my_id</code>.<br>
+                        В поле «Дополнительный параметр» введите искомый фрагмент.<br><br>
+
+                        <b>Регулярные выражения</b><br>
+                        Проверяет контент по указанному регулярному выражению.<br>
+                        В поле «Проверяемый блок» введите регулярное выражение для поиска контента.<br>
+                        В поле «Дополнительный параметр» введите <code>json</code>, если данные в формате JSON, либо оставьте поле пустым.<br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item mb-2 lc-block">
+                <h2 class="accordion-header">
+                    <span class="accordion-button collapsed" data-bs-target="#flush-collapse-3">
+                        <b class="h5 fw-bold">Управление уже настроенными проверками.</b>
+                    </span>
+                </h2>
+
+                <div id="flush-collapse-3" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Управлять и изменять проверки, можно перейдя в:<br>  <i class="ti-layers-alt"></i> Проверки / <i class="ti-list"></i> Список.<br><br>
+                        В правом столбике находятся иконки управления:<br>
+                        <i class="ti-info-alt text-info"></i> - Просмотреть краткую информацию по сложной проверке<br>
+                        <i class="ti-pencil text-primary"></i> - Редактировать проверку<br>
+                        <i class="ti-control-play text-success"></i> - Запустить проверку<br>
+                        <i class="ti-control-pause text-apricot"></i> - Активировать/Деактивировать проверку<br>
+                        <i class="ti-trash text-danger"></i> - Удалить проверку<br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item mb-2 lc-block">
+                <h2 class="accordion-header">
+                    <span class="accordion-button collapsed" data-bs-target="#flush-collapse-4">
+                        <b class="h5 fw-bold">Как запустить проверку?</b>
+                    </span>
+                </h2>
+
+                <div id="flush-collapse-4" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Для одноразового запуска воспользуйтесь кнопкой <i class="ti-control-play"></i> на главной странице.<br>
+                        или <i class="ti-control-play text-success"></i> на странице <i class="ti-list"></i> Список <br>
+                        Для регулярного выполнения проверок, установите периодические задания, задав необходимое время и подтвердив операцию нажатием кнопки "добавить".
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item mb-2 lc-block">
+                <h2 class="accordion-header">
+                    <span class="accordion-button collapsed" data-bs-target="#flush-collapse-5">
+                        <b class="h5 fw-bold">Как настроить уведомления в telegram?</b>
+                    </span>
+                </h2>
+
+                <div id="flush-collapse-5" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        Чтобы настроить уведомления в Telegram, выполните следующие шаги:
+                        <ol>
+                            <li>Перейдите в настройки.</li>
+                            <li>Найдите блок "Уведомления Telegram".</li>
+                            <li>Нажмите на ссылку, ведущую на бота Telegram.</li>
+                            <li>Откроется окно чата с ботом. Отправьте ему команду /start.</li>
+                            <li>Скопируйте ваш уникальный ID, который отправит вам бот.</li>
+                            <li>Вернувшись в настройки, вставьте этот ID в соответствующую форму для добавления нового пользователя.</li>
+                        </ol>
+
+                        Альтернативный способ:
+                        <ol>
+                            <li>Перейдите в настройки.</li>
+                            <li>Найдите блок "Уведомления Telegram".</li>
+                            <li>Скопируйте код подтверждения на странице настроек.</li>
+                            <li>Нажмите на ссылку, ведущую на бота Telegram.</li>
+                            <li>Откроется окно чата с ботом. Отправьте ему команду /start.</li>
+                            <li>Используйте специальную команду в боте формата /con [код подтверждения], заменяя [код подтверждения] вашим уникальным значением.</li>
+                        </ol>
+                        Теперь уведомления будут приходить вам прямо в Telegram.
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+
+
 {% endblock %}
 
 {% block scripts %}
+    <script>
+        document.querySelectorAll('.accordion-button').forEach((item) => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                let cur_elem = document.querySelector(this.dataset.bsTarget).classList;
+                if (!cur_elem.contains('show')) {
+                    cur_elem.add('show')
+                } else {
+                    cur_elem.remove('show')
+                }
+            })
+        })
+    </script>
 {% endblock %}

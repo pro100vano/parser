@@ -18,6 +18,7 @@ services:
     build:
       context: .
       network: host
+    restart: always
     command: celery -A parser_proj worker -l info
     volumes:
       - ./:/usr/src/app/
@@ -38,6 +39,7 @@ services:
     build:
       context: .
       network: host
+    restart: always
     command: celery -A parser_proj beat -l info
     volumes:
       - ./:/usr/src/app/

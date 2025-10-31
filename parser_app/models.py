@@ -66,14 +66,16 @@ class TargetSettingsModel(models.Model):
     CONTAINS = 3
     STARTS = 4
     ENDS = 5
+    RANDOM = 6
 
     CHECKING_TYPE = (
-        (NOT_EMPTY, 'Блок не пустой'),
-        (LESS_ENTRIES, 'Элементов меньше чем'),
-        (MORE_ENTRIES, 'Элементов больше чем'),
-        (CONTAINS, 'Содержит'),
-        (STARTS, 'Начинается с'),
-        (ENDS, 'Заканчивается'),
+        (NOT_EMPTY, 'Проверка заполнения блока'),
+        (LESS_ENTRIES, 'Количество элементов превышает указанное'),
+        (MORE_ENTRIES, 'Количество элементов ниже указанного'),
+        (CONTAINS, 'Соответствие содержанию'),
+        (STARTS, 'Начало контента'),
+        (ENDS, 'Окончание контента'),
+        (RANDOM, 'Регулярное выражение'),
     )
 
     target = models.ForeignKey(TargetsModel, verbose_name="Цель", related_name="settings", null=False, blank=False,

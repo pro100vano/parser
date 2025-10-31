@@ -27,7 +27,7 @@
 
                 <!-- BOF Header Nav -->
                 <div class="navbar-menu d-flex">
-                    <div class="menu-item text-right mr-1">
+                    <div class="menu-item text-right mr-1 px-3" style="width: max-content;">
                         <span class="text-right text-apple font-size-16 align-items-center d-flex h-100">{{ user }}</span>
                     </div>
                     <div class="menu-item" id="notifications_wrapper">
@@ -84,15 +84,15 @@
                         <div class="subcat">
                             <ul>
                                 <li {% if request.resolver_match.url_name == "list" and 'targets' in request.resolver_match.namespaces %}class="active"{% endif %}>
-                                    <a href="{% url 'main:targets:list' %}">Список</a>
+                                    <a href="{% url 'main:targets:list' %}"><i class="ti-list"></i>Список</a>
                                 </li>
                                 <li {% if request.resolver_match.url_name == "create" and 'targets' in request.resolver_match.namespaces %}class="active"{% endif %}>
-                                    <a href="{% url 'main:targets:create' %}">Добавить</a>
+                                    <a href="{% url 'main:targets:create' %}"><i class="ti-plus"></i>Добавить</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
-                    <li>
+                    <li {% if request.resolver_match.url_name == "documentation"%}class="active"{% endif %}>
                         <a href="{% url 'main:documentation' %}">
                             <i class="ti-agenda"></i>
                             <span class="menu-text">Инструкции</span>

@@ -7,7 +7,8 @@ app_name = 'main'
 targets = [
     path('list/', views.TargetsList.as_view(), name='list'),
     path('create/', views.CreateTarget.as_view(), name='create'),
-    path('edit/<int:pk>/', views.EditTarget.as_view(), name='edit')
+    path('edit/<int:pk>/', views.EditTarget.as_view(), name='edit'),
+    path('start/<int:pk>/', views.StartTarget.as_view(), name='start')
 ]
 
 urlpatterns = [

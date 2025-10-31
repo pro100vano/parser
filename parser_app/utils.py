@@ -1,5 +1,7 @@
 import requests
 import time
+import re
+import json
 from asgiref.sync import async_to_sync
 from bs4 import BeautifulSoup as BSoup
 
@@ -44,6 +46,36 @@ class Parser:
             else:
                 notification_message += f"🔴\"{target.title}\" не доступен\n"
                 NotificationRepository(self.user).create_notification(f"\"{target.title}\" не доступен")
+        async_to_sync(TgNotificationsRepository(self.user).asend_message_all)(notification_message)
+
+    def test_parser(self, target):
+        notification_message = ""
+        start = time.perf_counter()
+        try:
+            if target.type == TargetsModel.DIFFICULT:
+                result = self.difficult_parser(target)
+            elif target.type == TargetsModel.AVITO:
+                result = self.avito_parser(target)
+            elif target.type == TargetsModel.YANDEX:
+                result = self.yandex_parser(target)
+            elif target.type == TargetsModel.CIAN:
+                result = self.cian_parser(target)
+            else:
+                result = self.simple_parser(target)
+        except Exception as e:
+            result = TargetsModel.ERROR
+            print(e)
+        load_time = time.perf_counter() - start
+        ParserRepository.change_status(target, result)
+        if result != TargetsModel.ERROR:
+            if result == TargetsModel.SUCCESS:
+                notification_message += f"🟢\"{target.title}\" доступен. "
+            else:
+                notification_message += f"🟠\"{target.title}\" доступен, но имеет ошибки. "
+            notification_message += f"Отклик: {round(load_time, 3)} сек.\n"
+        else:
+            notification_message += f"🔴\"{target.title}\" не доступен\n"
+            NotificationRepository(self.user).create_notification(f"\"{target.title}\" не доступен")
         async_to_sync(TgNotificationsRepository(self.user).asend_message_all)(notification_message)
 
     def simple_parser(self, target):
@@ -101,6 +133,9 @@ class Parser:
                         success = False
                 elif setting.type == TargetSettingsModel.ENDS:
                     if not self.parser_ends(response.text, setting):
+                        success = False
+                elif setting.type == TargetSettingsModel.RANDOM:
+                    if not self.parser_random(response.text, setting):
                         success = False
             if success:
                 return TargetsModel.SUCCESS
@@ -205,4 +240,15 @@ class Parser:
             return False
         if content.endswith(setting.type_param):
             return True
+        return False
+
+    def parser_random(self, html, setting):
+        match = re.findall(setting.block, html, re.DOTALL | re.MULTILINE)[0]
+        if setting.type_param == 'json':
+            data = json.loads(match)
+            if data.__len__() > 0:
+                return True
+        else:
+            if match.__len__() > 0:
+                return True
         return False
