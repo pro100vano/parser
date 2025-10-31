@@ -67,6 +67,7 @@ class TargetSettingsModel(models.Model):
     STARTS = 4
     ENDS = 5
     RANDOM = 6
+    JSON = 7
 
     CHECKING_TYPE = (
         (NOT_EMPTY, 'Проверка заполнения блока'),
@@ -76,6 +77,7 @@ class TargetSettingsModel(models.Model):
         (STARTS, 'Начало контента'),
         (ENDS, 'Окончание контента'),
         (RANDOM, 'Регулярное выражение'),
+        (JSON, 'JSON содержит'),
     )
 
     target = models.ForeignKey(TargetsModel, verbose_name="Цель", related_name="settings", null=False, blank=False,

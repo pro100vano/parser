@@ -137,6 +137,9 @@ class Parser:
                 elif setting.type == TargetSettingsModel.RANDOM:
                     if not self.parser_random(response.text, setting):
                         success = False
+                elif setting.type == TargetSettingsModel.JSON:
+                    if not self.parser_json(response.text, setting):
+                        success = False
             if success:
                 return TargetsModel.SUCCESS
             else:
@@ -252,3 +255,23 @@ class Parser:
             if match.__len__() > 0:
                 return True
         return False
+
+    def parser_json(self, html, setting):
+        try:
+            data = json.loads(html)[setting.block]
+            params = setting.type_param.split(' ')
+            if params[0] == '=':
+                if data == int(params[1]):
+                    return True
+            elif params[0] == '>':
+                if data > int(params[1]):
+                    return True
+            elif params[0] == '<':
+                if data < int(params[1]):
+                    return True
+        except Exception as e:
+            print(e)
+            return False
+        return False
+
+
